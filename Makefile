@@ -8,26 +8,16 @@ OBJDIR = $(BINDIR)/obj
 SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
 OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
 
-TARGET = ppinterp
+TARGET = $(BINDIR)/ppinterp
 
 $(TARGET): init $(OBJECTS)
-	@echo -n 'Linking $@...'
-	@$(CC) $(CFLAGS) $(OBJECTS) -o $@
-	@echo ' OK'
-
-$(OBJECTS): $(SOURCES)
-	@echo $@
-	@echo -n 'Compiling $@...'
-	@$(CC) -c $(CFLAGS) $< -o $@
-	@echo ' OK'
+	$(CC) $(CFLAGS) $(SOURCES) -o $@
 
 init:
 	@mkdir -p $(OBJDIR)
 
 clean:
 	@rm -rf $(BINDIR) 
-	@rm -f src/*.o
-	@rm -f *.o
 	
 .PHONY: clean init
 	
