@@ -11,34 +11,49 @@
 #include <memory>
 
 using std::ifstream;
+using std::istream;
 using std::string;
 using std::cout;
 using std::endl;
 using std::ios;
 using std::shared_ptr;
 
+#include "ErrorHandler.h"
+
 int main(int argc, const char* argv[])
 {
-    if (argc < 2)
-    {
-        cout << "Not enough arguments" << endl;
-        cout << "Aborting ..." << endl;
-        return 1;
-    }
-    string code_file_path = argv[1];
-    shared_ptr<ifstream> input_stream(new ifstream(code_file_path, ios::in));
+//    if (argc < 2)
+//    {
+//        cout << "Not enough arguments" << endl;
+//        cout << "Aborting ..." << endl;
+//        return 1;
+//    }
+//    string code_file_path = argv[1];
+    string code_file_path = "../test/simple_instruction.pp";
+    shared_ptr<ifstream> input_stream(new ifstream(code_file_path));
     
+    if (!*input_stream)
+    {
+        cout << "File " << code_file_path << " not found" << endl;
+        cout << "Aborting..." << endl;
+        return 2;
+    }
+
     long file_length = 0;
-    input_stream->seekg(0, ios::end);
+    input_stream->seekg(0, input_stream->end);
     file_length = input_stream->tellg();
-    input_stream->seekg(0, ios::beg);
+    input_stream->seekg(0, input_stream->beg);
     if (file_length == 0)
     {
         cout << "Empty code file" << endl;
-        cout << "Aborting ..." << endl;
-        return 2;
+        cout << "Nothing to do..." << endl;
+        input_stream->close();
+        return 3;
     }
     
+    
+    
+    input_stream->close();
     return 0;
 }
 
