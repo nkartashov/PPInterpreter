@@ -46,6 +46,8 @@ Lexeme handle_alphanumeric(string alphanumeric, int line, int column)
         type = kPrintKeyword;
     if (alphanumeric == "while")
         type = kWhileKeyword;
+    if (alphanumeric == "return")
+        type = kReturnKeyword;
     
     return Lexeme(type, alphanumeric, line, column);
 }

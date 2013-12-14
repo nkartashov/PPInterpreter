@@ -58,12 +58,13 @@ void NumericState::next_state(LexingAutomation &automation, SymbolTypes symbol_t
                 automation.clear_buffer();
                 automation.set_state(new EmptyState());
             }
-            
+            break;
             
         case kWhitespace:
             {
                 automation.set_result(handle_number(automation.get_buffer_prefix(), automation.line(), automation.column()));
                 automation.clear_buffer();
+                automation.set_state(new EmptyState());
             }
             break;
             

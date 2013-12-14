@@ -8,6 +8,7 @@
 
 #include <iostream>
 #include <fstream>
+#include <vector>
 #include <memory>
 
 using std::ifstream;
@@ -18,6 +19,10 @@ using std::endl;
 using std::ios;
 using std::shared_ptr;
 
+using namespace std;
+
+#include "Lexer.h"
+#include "Lexeme.h"
 #include "ErrorHandler.h"
 
 int main(int argc, const char* argv[])
@@ -29,8 +34,13 @@ int main(int argc, const char* argv[])
 //        return 1;
 //    }
 //    string code_file_path = argv[1];
-    string code_file_path = "../test/simple_instruction.pp";
-    shared_ptr<ifstream> input_stream(new ifstream(code_file_path));
+//    string code_file_path = "simple_instruction.pp";
+//    string code_file_path = "fib1.pp";
+//    string code_file_path = "fib2.pp";
+//    string code_file_path = "comment_test.pp";
+//    string code_file_path = "syntax_error_test.pp";
+    string code_file_path = "syntax_error_test2.pp";
+    ifstream* input_stream = new ifstream(code_file_path);
     
     if (!*input_stream)
     {
@@ -51,7 +61,10 @@ int main(int argc, const char* argv[])
         return 3;
     }
     
+    Lexer lexer(input_stream);
+    lexer.tokenize();
     
+    vector<Lexeme> lol = lexer.get_result();
     
     input_stream->close();
     return 0;

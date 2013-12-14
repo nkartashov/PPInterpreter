@@ -52,11 +52,13 @@ void AlphanumericState::next_state(LexingAutomation &automation, SymbolTypes sym
                 automation.clear_buffer();
                 automation.set_state(new EmptyState());
             }
+            break;
             
         case kWhitespace:
             {
                 automation.set_result(handle_alphanumeric(automation.get_buffer_prefix(), automation.line(), automation.column()));
                 automation.clear_buffer();
+                automation.set_state(new EmptyState());
             }
             break;
             

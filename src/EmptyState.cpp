@@ -38,12 +38,13 @@ void EmptyState::next_state(LexingAutomation& automation, SymbolTypes symbol_typ
                 char lexeme_symbol = buffer[buffer.length() - 1];
                 Lexeme result = handle_separator(lexeme_symbol, automation.line(), automation.column());
                 automation.set_result(result);
-                automation.set_state(new EmptyState());
+                automation.clear_buffer();
             }
             break;
             
         case kLinefeed:
             automation.set_result(end_of_line(automation.line(), automation.column()));
+            automation.clear_buffer();
             break;
             
         case kWhitespace:
