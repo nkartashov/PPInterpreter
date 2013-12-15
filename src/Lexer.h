@@ -28,6 +28,8 @@ public:
     vector<Lexeme> get_result();
     
 private:
+    vector<Lexeme> clean_result_stream(vector<Lexeme> result);
+    
     istream* m_stream;
     LexingAutomation* m_automation;
 };

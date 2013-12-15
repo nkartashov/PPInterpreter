@@ -46,11 +46,33 @@ void Lexer::tokenize()
             report_syntax_error(m_automation->line());
             return;
         }
-        
     }
+}
+
+vector<Lexeme> Lexer::clean_result_stream(vector<Lexeme> result)
+{
+    vector<Lexeme> clean_result;
+    
+    size_t i = 0;
+    
+    while (i < result.size())
+    {
+        clean_result.push_back(result[i]);
+        if (result[i].type() == kEndofLine)
+        {
+            ++i;
+            while (i < result.size()  && result[i].type() == kEndofLine) {++i;}
+        }
+        else
+            ++i;
+    }
+    
+    return clean_result;
 }
 
 vector<Lexeme> Lexer::get_result()
 {
-    return m_automation->result();
+    vector<Lexeme> result = m_automation->result();
+    return clean_result_stream(result);
 }
+

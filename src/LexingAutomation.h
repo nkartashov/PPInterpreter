@@ -39,7 +39,7 @@ public:
     string const& buffer() const {return m_buffer;}
     int line() const {return m_line;}
     int column() const {return m_column;}
-    vector<Lexeme> result() {return m_result;}
+    vector<Lexeme> const& result() const {return m_result;}
     
 private:
     LexingAutomation(LexingAutomation const&);
