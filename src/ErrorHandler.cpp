@@ -6,15 +6,19 @@
 //  Copyright (c) 2013 Nikita Kartashov. All rights reserved.
 //
 
+#include <iostream>
+
 #include "ErrorHandler.h"
 
+using std::cout;
+using std::endl;
 
-void ErrorHandler::report_syntax_error(int line_number)
+void report_syntax_error(int line_number)
 {
     cout << "line " << line_number << ": syntax error." << endl;
 }
 
-void ErrorHandler::report_division_by_zero(int line_number)
+void report_division_by_zero(int line_number)
 {
     cout << "line " << line_number << ": division by zero." << endl;
 }

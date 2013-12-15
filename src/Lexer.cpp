@@ -43,7 +43,7 @@ void Lexer::tokenize()
         m_automation->next_symbol('\n');
         if (!m_automation->is_good())
         {
-            ErrorHandler::report_syntax_error(m_automation->line());
+            report_syntax_error(m_automation->line());
             return;
         }
         

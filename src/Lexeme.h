@@ -25,10 +25,10 @@ public:
     m_column(column)
     {}
 
-    LexemeTypes type() {return m_type;}
-    string value() {return m_value;}
-    int line() {return m_line;}
-    int column() {return m_column;}
+    LexemeTypes type() const {return m_type;}
+    string value() const {return m_value;}
+    int line() const {return m_line;}
+    int column() const {return m_column;}
 
 private:
     LexemeTypes m_type;
