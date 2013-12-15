@@ -6,25 +6,36 @@
 //  Copyright (c) 2013 Nikita Kartashov. All rights reserved.
 //
 
-#ifndef __PPInterpreter__AssignmentInstruction__
-#define __PPInterpreter__AssignmentInstruction__
+#ifndef PPInterpreter_AssignmentInstruction_h
+#define PPInterpreter_AssignmentInstruction_h
 
 #include <string>
+#include <vector>
 
 #include "Instruction.h"
-#include "Declarations.h"
 
 using std::string;
+using std::vector;
 
 class AssignmentInstruction: public Instruction
 {
 public:
-    AssignmentInstruction(Instruction* parent, string assignee);
-    int evaluate (arg_vector* args);
-
-private:
-    string m_assignee;
+    AssignmentInstruction(int line,
+                          string const& name,
+                          Instruction* expression):
+    Instruction(line),
+    m_name(name),
+    m_expression(expression) {}
     
+    string const& name() const {return m_name;}
+    Instruction* const expression() const {return m_expression;}
+    
+    int accept_visit(Visitor& visitor) {return visitor.visit(*this);}
+    
+private:
+    string m_name;
+    Instruction* m_expression;
 };
 
-#endif /* defined(__PPInterpreter__AssignmentInstruction__) */
+
+#endif

@@ -9,24 +9,19 @@
 #ifndef PPInterpreter_Instruction_h
 #define PPInterpreter_Instruction_h
 
-#include "Declarations.h"
+class Visitor;
 
 class Instruction
 {
 public:
-    Instruction(Instruction* parent): m_parent(parent), m_scope(0) {}
-    virtual ~Instruction() {delete m_scope;}
-    
-    virtual int evaluate(arg_vector* args = 0) = 0;
-    
-    virtual bool is_returnable() const {return false;}
-    
-    var_scope const* scope() const {return m_scope;}
+    Instruction(int line): m_line(line) {}
+    virtual ~Instruction() {}
+    int line() const {return m_line;}
+    virtual bool does_return() const {return false;}
+    virtual int accept_visit(Visitor& visitor) = 0;
     
 private:
-    Instruction* m_parent;
-    var_scope* m_scope;
+    int m_line;
 };
-
 
 #endif
