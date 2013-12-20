@@ -16,17 +16,17 @@ class WhileBlock: public InstructionBlock
 public:
     WhileBlock(int line,
                instructions const& block,
-               Instruction* condition):
+               instruction_ptr condition):
     InstructionBlock(line, block),
     m_condition(condition)
     {}
     
-    Instruction const* condition() const {return m_condition;}
+    instruction_ptr condition() const {return m_condition;}
     
     int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
     
 private:
-    Instruction* m_condition;
+    instruction_ptr m_condition;
 };
 
 #endif

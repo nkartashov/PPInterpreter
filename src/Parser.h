@@ -12,12 +12,14 @@
 #include <vector>
 #include <string>
 
+#include "Declarations.h"
+
 using std::vector;
 using std::string;
 
 class Lexeme;
 enum LexemeTypes;
-class Instruction;
+
 
 class Parser
 {
@@ -45,25 +47,25 @@ public:
     
     bool is_good();
     
-    Instruction* get_parsed_program() {return m_program;}
+    program_ptr get_parsed_program() {return m_program;}
     
 private:
-    Instruction* parse_program();
-    Instruction* parse_instruction();
-    Instruction* parse_function_definition();
-    Instruction* parse_assignment();
-    Instruction* parse_constant();
-    Instruction* parse_variable();
-    Instruction* parse_function_call();
-    Instruction* parse_expression();
-    Instruction* parse_condition();
-    Instruction* parse_read();
-    Instruction* parse_term();
-    Instruction* parse_value();
-    Instruction* parse_print();
-    Instruction* parse_if_block();
-    Instruction* parse_while_block();
-    Instruction* parse_return();
+    program_ptr parse_program();
+    instruction_ptr parse_instruction();
+    instruction_ptr parse_function_definition();
+    instruction_ptr parse_assignment();
+    instruction_ptr parse_constant();
+    instruction_ptr parse_variable();
+    instruction_ptr parse_function_call();
+    instruction_ptr parse_expression();
+    instruction_ptr parse_condition();
+    instruction_ptr parse_read();
+    instruction_ptr parse_term();
+    instruction_ptr parse_value();
+    instruction_ptr parse_print();
+    instruction_ptr parse_if_block();
+    instruction_ptr parse_while_block();
+    instruction_ptr parse_return();
     
     bool match_lexeme_simple_arithmetic(Lexeme);
     bool match_lexeme_complex_arithmetic(Lexeme);
@@ -78,7 +80,7 @@ private:
     int m_start_line;
     const vector<Lexeme>& m_lexemes;
     bool m_good;
-    Instruction* m_program;
+    program_ptr m_program;
 };
 
 #endif /* defined(__PPInterpreter__Parser__) */

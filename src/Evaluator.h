@@ -10,6 +10,7 @@
 #define __PPInterpreter__Evaluator__
 
 #include <stack>
+#include <map>
 
 #include "Visitor.h"
 #include "Declarations.h"
@@ -25,6 +26,9 @@ class Evaluator: public Visitor
 public:
     Evaluator(Program const& program);
     
+    void execute_program();
+    
+private:
     int visit(Constant const&);
     int visit(Variable const&);
     int visit(Program const&);
@@ -42,18 +46,18 @@ public:
     
     variable_scope& scope();
     
-    
     void in_function(variable_scope&);
     void out_function();
     
     void set_return_value(int value);
     bool has_returned() {return m_has_returned;}
     int on_return();
+
     
-private:
     bool m_has_returned;
     int m_result;
     
+    Program const& m_program;
     function_scope m_function_scope;
     stack<variable_scope> m_variable_scopes;
 };

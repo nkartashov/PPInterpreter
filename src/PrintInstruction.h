@@ -14,14 +14,14 @@
 class PrintInstruction: public Instruction
 {
 public:
-    PrintInstruction(int line, Instruction* expression): Instruction(line), m_expression(expression) {}
+    PrintInstruction(int line, instruction_ptr expression): Instruction(line), m_expression(expression) {}
     
-    Instruction const* expression() const {return m_expression;}
+    instruction_ptr expression() const {return m_expression;}
     
     int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
     
 private:
-    Instruction* m_expression;
+    instruction_ptr m_expression;
 };
 
 #endif

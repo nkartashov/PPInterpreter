@@ -79,10 +79,12 @@ int main(int argc, const char* argv[])
     
     vector<Lexeme> lol = lexer.get_result();
     
-    Parser* parser = new Parser(lol);
+    Parser parser(lol);
     
-    Program* program = (Program*) parser->get_parsed_program();
-    Evaluator* eval = new Evaluator(*program);
+    shared_ptr<Program> program = parser.get_parsed_program();
+    Evaluator eval(*program);
+    
+    eval.execute_program();
     
     input_stream->close();
     return 0;

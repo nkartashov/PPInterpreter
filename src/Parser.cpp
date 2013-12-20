@@ -137,12 +137,12 @@ int Parser::parse_number(string str)
     return atoi(str.c_str());
 }
 
-Instruction* Parser::parse_program()
+program_ptr Parser::parse_program()
 {
     start();
     instructions program_body;
     instructions functions;
-    Instruction* instruction = 0;
+    instruction_ptr instruction = 0;
     
     while (match_current_lexeme(kEndofLine))
         next_line();
@@ -170,13 +170,13 @@ Instruction* Parser::parse_program()
         program_body.push_back(instruction);
     }
     
-    return new Program(end(), program_body, functions);
+    return program_ptr(new Program(end(), program_body, functions));
 }
 
-Instruction* Parser::parse_instruction()
+instruction_ptr Parser::parse_instruction()
 {
     save();
-    Instruction* result = parse_assignment();
+    instruction_ptr result = parse_assignment();
     
     if (!result)
     {
@@ -205,7 +205,7 @@ Instruction* Parser::parse_instruction()
     return result;
 }
 
-Instruction* Parser::parse_print()
+instruction_ptr Parser::parse_print()
 {
     start();
     
@@ -214,15 +214,15 @@ Instruction* Parser::parse_print()
     
     next_lexeme();
     
-    Instruction* expression = parse_expression();
+    instruction_ptr expression = parse_expression();
     
     if (!expression)
         return 0;
     
-    return new PrintInstruction(end(), expression);
+    return instruction_ptr(new PrintInstruction(end(), expression));
 }
 
-Instruction* Parser::parse_read()
+instruction_ptr Parser::parse_read()
 {
     start();
     
@@ -238,10 +238,10 @@ Instruction* Parser::parse_read()
     
     next_lexeme();
     
-    return new ReadInstruction(end(), name);
+    return instruction_ptr(new ReadInstruction(end(), name));
 }
 
-Instruction* Parser::parse_assignment()
+instruction_ptr Parser::parse_assignment()
 {
     start();
     
@@ -257,15 +257,15 @@ Instruction* Parser::parse_assignment()
     
     next_lexeme();
     
-    Instruction* expression = parse_expression();
+    instruction_ptr expression = parse_expression();
     
     if (!expression)
         return 0;
     
-    return new AssignmentInstruction(end(), name, expression);
+    return instruction_ptr(new AssignmentInstruction(end(), name, expression));
 }
 
-Instruction* Parser::parse_return()
+instruction_ptr Parser::parse_return()
 {
     start();
     
@@ -274,15 +274,15 @@ Instruction* Parser::parse_return()
     
     next_lexeme();
     
-    Instruction* expression = parse_expression();
+    instruction_ptr expression = parse_expression();
     
     if (!expression)
         return 0;
     
-    return new ReturnInstruction(end(), expression);
+    return instruction_ptr(new ReturnInstruction(end(), expression));
 }
 
-Instruction* Parser::parse_if_block()
+instruction_ptr Parser::parse_if_block()
 {
     start();
     
@@ -291,7 +291,7 @@ Instruction* Parser::parse_if_block()
     
     next_lexeme();
     
-    Instruction* condition = parse_condition();
+    instruction_ptr condition = parse_condition();
     
     if(!condition)
         return 0;
@@ -307,7 +307,7 @@ Instruction* Parser::parse_if_block()
     
     while (!match_current_lexeme(kEndKeyword))
     {
-        Instruction* instruction = parse_instruction();
+        instruction_ptr instruction = parse_instruction();
         
         if (!instruction)
             return 0;
@@ -316,10 +316,10 @@ Instruction* Parser::parse_if_block()
     }
     
     next_lexeme();
-    return new IfBlock(end(), block, condition);
+    return instruction_ptr(new IfBlock(end(), block, condition));
 }
 
-Instruction* Parser::parse_while_block()
+instruction_ptr Parser::parse_while_block()
 {
     start();
     
@@ -328,7 +328,7 @@ Instruction* Parser::parse_while_block()
     
     next_lexeme();
     
-    Instruction* condition = parse_condition();
+    instruction_ptr condition = parse_condition();
     
     if(!condition)
         return 0;
@@ -344,7 +344,7 @@ Instruction* Parser::parse_while_block()
     
     while (!match_current_lexeme(kEndKeyword))
     {
-        Instruction* instruction = parse_instruction();
+        instruction_ptr instruction = parse_instruction();
         
         if (!instruction)
             return 0;
@@ -353,10 +353,10 @@ Instruction* Parser::parse_while_block()
     }
     
     next_lexeme();
-    return new WhileBlock(end(), block, condition);
+    return instruction_ptr(new WhileBlock(end(), block, condition));
 }
 
-Instruction* Parser::parse_function_definition()
+instruction_ptr Parser::parse_function_definition()
 {
     start();
     if (!match_current_lexeme(kDefKeyword))
@@ -412,7 +412,7 @@ Instruction* Parser::parse_function_definition()
     
     while (!match_current_lexeme(kEndKeyword))
     {
-        Instruction* instruction = parse_instruction();
+        instruction_ptr instruction = parse_instruction();
         if (!instruction)
             return 0;
         
@@ -423,10 +423,10 @@ Instruction* Parser::parse_function_definition()
     
     next_line();
     
-    return new Function(end(), function_body, name, parameters);
+    return instruction_ptr(new Function(end(), function_body, name, parameters));
 }
 
-Instruction* Parser::parse_constant()
+instruction_ptr Parser::parse_constant()
 {
     start();
     
@@ -437,12 +437,12 @@ Instruction* Parser::parse_constant()
     
     next_lexeme();
     
-    return new Constant(end(), parse_number(value));
+    return instruction_ptr(new Constant(end(), parse_number(value)));
 }
 
-Instruction* Parser::parse_expression()
+instruction_ptr Parser::parse_expression()
 {
-    Instruction* left = parse_term();
+    instruction_ptr left = parse_term();
     
     if (!left)
         return 0;
@@ -454,7 +454,7 @@ Instruction* Parser::parse_expression()
     
     next_lexeme();
     
-    Instruction* right = parse_expression();
+    instruction_ptr right = parse_expression();
     
     if (!right)
         return 0;
@@ -462,15 +462,15 @@ Instruction* Parser::parse_expression()
     switch (lexeme.type())
     {
         case kAddition:
-            return new ArithmeticOperationInstruction(end(), kAdd, left, right);
+            return instruction_ptr(new ArithmeticOperationInstruction(end(), kAdd, left, right));
         case kSubtraction:
-            return new ArithmeticOperationInstruction(end(), kSub, left, right);
+            return instruction_ptr(new ArithmeticOperationInstruction(end(), kSub, left, right));
         default:
             return 0;
     }
 }
 
-Instruction* Parser::parse_function_call()
+instruction_ptr Parser::parse_function_call()
 {
     start();
     
@@ -482,7 +482,7 @@ Instruction* Parser::parse_function_call()
     next_lexeme();
     
     if (!match_current_lexeme(kLeftBracket))
-        return new Variable(end(), name);
+        return instruction_ptr(new Variable(end(), name));
     
     next_lexeme();
     
@@ -491,7 +491,7 @@ Instruction* Parser::parse_function_call()
     {
         while (true)
         {
-            Instruction* parameter = parse_expression();
+            instruction_ptr parameter = parse_expression();
             if (!parameter)
                 return 0;
             
@@ -506,12 +506,12 @@ Instruction* Parser::parse_function_call()
         
         next_lexeme();
     }
-    return new FunctionCallInstruction(end(), name, parameters);
+    return instruction_ptr(new FunctionCallInstruction(end(), name, parameters));
 }
 
-Instruction* Parser::parse_term()
+instruction_ptr Parser::parse_term()
 {
-    Instruction* left = parse_value();
+    instruction_ptr left = parse_value();
     
     if (!left)
         return 0;
@@ -523,7 +523,7 @@ Instruction* Parser::parse_term()
     
     next_lexeme();
     
-    Instruction* right = parse_term();
+    instruction_ptr right = parse_term();
     
     if (!right)
         return 0;
@@ -531,31 +531,31 @@ Instruction* Parser::parse_term()
     switch (lexeme.type())
     {
         case kMultiplication:
-            return new ArithmeticOperationInstruction(end(), kMul, left, right);
+            return instruction_ptr(new ArithmeticOperationInstruction(end(), kMul, left, right));
         case kDivision:
-            return new ArithmeticOperationInstruction(end(), kDiv, left, right);
+            return instruction_ptr(new ArithmeticOperationInstruction(end(), kDiv, left, right));
         default:
             return 0;
     }
 }
 
-Instruction* Parser::parse_value()
+instruction_ptr Parser::parse_value()
 {
     if (match_current_lexeme(kSubtraction))
     {
         next_lexeme();
         
-        Instruction* value = parse_value();
+        instruction_ptr value = parse_value();
         if (!value)
             return 0;
         
-        return new ArithmeticOperationInstruction(end(), kSub, new Constant(end(), 0), value);
+        return instruction_ptr(new ArithmeticOperationInstruction(end(), kSub, instruction_ptr(new Constant(end(), 0)), value));
     }
     
     if (match_current_lexeme(kLeftBracket))
     {
         next_lexeme();
-        Instruction* expression = parse_expression();
+        instruction_ptr expression = parse_expression();
         
         if (!match_current_lexeme(kRightBracket))
             return 0;
@@ -565,16 +565,16 @@ Instruction* Parser::parse_value()
         return expression;
     }
     
-    Instruction* value = parse_constant();
+    instruction_ptr value = parse_constant();
     if (!value)
         value = parse_function_call();
     
     return value;
 }
 
-Instruction* Parser::parse_condition()
+instruction_ptr Parser::parse_condition()
 {
-    Instruction* left = parse_expression();
+    instruction_ptr left = parse_expression();
     
     if (!left)
         return 0;
@@ -586,7 +586,7 @@ Instruction* Parser::parse_condition()
     
     next_lexeme();
     
-    Instruction* right = parse_expression();
+    instruction_ptr right = parse_expression();
     
     if (!right)
         return 0;
@@ -594,17 +594,17 @@ Instruction* Parser::parse_condition()
     switch (lexeme.type())
     {
         case kEqualOperation:
-            return new ConditionalInstruction(end(), kEqual, left, right);
+            return instruction_ptr(new ConditionalInstruction(end(), kEqual, left, right));
         case kNotEqualOperation:
-            return new ConditionalInstruction(end(), kNotEqual, left, right);
+            return instruction_ptr(new ConditionalInstruction(end(), kNotEqual, left, right));
         case kLessOperation:
-            return new ConditionalInstruction(end(), kLess, left, right);
+            return instruction_ptr(new ConditionalInstruction(end(), kLess, left, right));
         case kGreaterOperation:
-            return new ConditionalInstruction(end(), kGreater, left, right);
+            return instruction_ptr(new ConditionalInstruction(end(), kGreater, left, right));
         case kLessEqualOperation:
-            return new ConditionalInstruction(end(), kLessEqual, left, right);
+            return instruction_ptr(new ConditionalInstruction(end(), kLessEqual, left, right));
         case kGreaterEqualOperation:
-            return new ConditionalInstruction(end(), kGreaterEqual, left, right);
+            return instruction_ptr(new ConditionalInstruction(end(), kGreaterEqual, left, right));
         default:
             return 0;
     }

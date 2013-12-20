@@ -11,10 +11,6 @@
 
 #include "Instruction.h"
 
-#include "Declarations.h"
-#include "Visitor.h"
-
-
 class InstructionBlock: public Instruction
 {
 public:

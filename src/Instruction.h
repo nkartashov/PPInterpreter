@@ -9,7 +9,8 @@
 #ifndef PPInterpreter_Instruction_h
 #define PPInterpreter_Instruction_h
 
-class Visitor;
+#include "Declarations.h"
+#include "Visitor.h"
 
 class Instruction
 {

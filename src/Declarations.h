@@ -10,12 +10,15 @@
 #define PPInterpreter_Declarations_h
 
 #include <vector>
-#include <string>
-#include <map>
-#include <utility>
+#include <memory>
 
-#include "Instruction.h"
+class Instruction;
+class Visitor;
+class Program;
 
-typedef std::vector<Instruction*> instructions;
+typedef std::shared_ptr<Instruction> instruction_ptr;
+typedef std::shared_ptr<Program> program_ptr;
+typedef std::shared_ptr<Visitor> visitor_ptr;
+typedef std::vector<instruction_ptr> instructions;
 
 #endif

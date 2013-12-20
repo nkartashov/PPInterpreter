@@ -31,9 +31,13 @@ using std::endl;
 
 
 
-Evaluator::Evaluator(Program const& instruction)
+Evaluator::Evaluator(Program const& program): m_program(program)
 {
-    visit(instruction);
+}
+
+void Evaluator::execute_program()
+{
+    visit(m_program);
 }
 
 int Evaluator::visit(Constant const& instruction)

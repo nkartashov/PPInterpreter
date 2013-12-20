@@ -22,19 +22,19 @@ class AssignmentInstruction: public Instruction
 public:
     AssignmentInstruction(int line,
                           string const& name,
-                          Instruction* expression):
+                          instruction_ptr expression):
     Instruction(line),
     m_name(name),
     m_expression(expression) {}
     
     string const& name() const {return m_name;}
-    Instruction* const expression() const {return m_expression;}
+    instruction_ptr const expression() const {return m_expression;}
     
     int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
     
 private:
     string m_name;
-    Instruction* m_expression;
+    instruction_ptr m_expression;
 };
 
 
