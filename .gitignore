@@ -142,3 +142,6 @@ xcuserdata
 # UNKNOWN: recommended by others, but I can't discover what these files are
 #
 # ...none. Everything is now explained.
+PPInterpreter.xcodeproj/project.pbxproj
+PPInterpreter.xcodeproj/project.xcworkspace/contents.xcworkspacedata
+PPInterpreter.xcodeproj/project.xcworkspace/xcshareddata/PPInterpreter.xccheckout
