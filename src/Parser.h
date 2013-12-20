@@ -25,19 +25,14 @@ public:
     Parser(vector<Lexeme>& lexemes);
     
     Lexeme const& current_lexeme();
-    Lexeme const& peek_next_lexeme();
     Lexeme const& next_lexeme();
-    bool match_lexeme(LexemeTypes type, Lexeme lexeme);
+
     bool match_current_lexeme(LexemeTypes type);
-    bool match_lexeme_simple_arithmetic(Lexeme);
-    bool match_lexeme_complex_arithmetic(Lexeme);
-    bool match_lexeme_logic(Lexeme);
     
     bool match_current_lexeme_simple_arithmetic();
     bool match_current_lexeme_complex_arithmetic();
     bool match_current_lexeme_logic();
 
-    
     void next_line();
     
     void start();
@@ -49,6 +44,8 @@ public:
     bool finished();
     
     bool is_good();
+    
+    Instruction* get_parsed_program() {return m_program;}
     
 private:
     Instruction* parse_program();
@@ -67,6 +64,12 @@ private:
     Instruction* parse_if_block();
     Instruction* parse_while_block();
     Instruction* parse_return();
+    
+    bool match_lexeme_simple_arithmetic(Lexeme);
+    bool match_lexeme_complex_arithmetic(Lexeme);
+    bool match_lexeme_logic(Lexeme);
+    
+    bool match_lexeme(LexemeTypes type, Lexeme lexeme);
     
     int parse_number(string);
     

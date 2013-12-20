@@ -37,7 +37,7 @@ public:
     Instruction const* left_operand() const {return m_left_operand;}
     Instruction const* right_operand() const {return m_right_operand;}
     
-    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
+    int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
     
 private:
     LogicalOperation m_operation;

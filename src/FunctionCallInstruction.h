@@ -19,14 +19,15 @@ using std::string;
 class FunctionCallInstruction: public Instruction
 {
 public:
-    FunctionCallInstruction(int line, instructions arguments):
+    FunctionCallInstruction(int line, string const& name, instructions arguments):
     Instruction(line),
+    m_name(name),
     m_arguments(arguments) {}
     
     string const& name() const {return m_name;}
-    instructions const& arguments() {return m_arguments;}
+    instructions const& arguments() const {return m_arguments;}
     
-    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
+    int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
     
 private:
     string m_name;

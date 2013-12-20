@@ -23,6 +23,7 @@ using namespace std;
 
 #include "Lexer.h"
 #include "Parser.h"
+#include "Evaluator.h"
 #include "Lexeme.h"
 #include "ErrorHandler.h"
 
@@ -46,7 +47,12 @@ int main(int argc, const char* argv[])
 //    string code_file_path = "assignment_test.pp";
 //    string code_file_path = "complex_assignment_test_no_brackets.pp";
 //    string code_file_path = "complex_assignment_test_with_brackets.pp";
-    string code_file_path = "assignment_with_functions.pp";
+//    string code_file_path = "assignment_with_functions.pp";
+//    string code_file_path = "simple_a+b.pp";
+//    string code_file_path = "a_plus_b_via_func.pp";
+//    string code_file_path = "rootN.pp";
+//    string code_file_path = "fib.pp";
+    string code_file_path = "one_more_fib.pp";
     ifstream* input_stream = new ifstream(code_file_path);
     
     if (!*input_stream)
@@ -75,7 +81,8 @@ int main(int argc, const char* argv[])
     
     Parser* parser = new Parser(lol);
     
-    
+    Program* program = (Program*) parser->get_parsed_program();
+    Evaluator* eval = new Evaluator(*program);
     
     input_stream->close();
     return 0;

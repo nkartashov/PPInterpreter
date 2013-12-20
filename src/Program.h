@@ -15,10 +15,12 @@
 class Program: public InstructionBlock
 {
 public:
-    Program(int line, instructions const& block): InstructionBlock(line, block) {}
-    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
+    Program(int line, instructions const& body, instructions& functions): InstructionBlock(line, body), m_functions(functions) {}
+    instructions const& functions() const {return m_functions;}
+    int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
     
 private:
+    instructions m_functions;
 };
 
 #endif

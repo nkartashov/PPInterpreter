@@ -21,9 +21,9 @@ public:
     m_condition(condition)
     {}
     
-    Instruction const* condition() {return m_condition;}
+    Instruction const* condition() const {return m_condition;}
     
-    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
+    int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
     
 private:
     Instruction* m_condition;

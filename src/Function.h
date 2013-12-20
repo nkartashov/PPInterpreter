@@ -32,7 +32,7 @@ public:
     
     bool does_return() const {return true;}
     
-    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
+    int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
 
 private:
     string m_name;

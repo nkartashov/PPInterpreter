@@ -10,6 +10,9 @@
 #define PPInterpreter_Declarations_h
 
 #include <vector>
+#include <string>
+#include <map>
+#include <utility>
 
 #include "Instruction.h"
 

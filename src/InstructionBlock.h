@@ -24,7 +24,7 @@ public:
     
     instructions const& block() const {return m_block;}
     
-    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
+    int accept_visit(Visitor* visitor) const {return visitor->visit(*this);}
     
 private:
     instructions m_block;

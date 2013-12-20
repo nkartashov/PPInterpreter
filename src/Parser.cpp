@@ -91,11 +91,6 @@ bool Parser::match_lexeme(LexemeTypes type, Lexeme lexeme)
     return lexeme.type() == type;
 }
 
-//bool Parser::match_next_lexeme(LexemeTypes type)
-//{
-//    return match_lexeme(type, peek_next_lexeme());
-//}
-
 void Parser::next_line()
 {
     if (match_current_lexeme(kEndofLine))
@@ -137,16 +132,6 @@ Lexeme const& Parser::next_lexeme()
     return current_lexeme();
 }
 
-Lexeme const& Parser::peek_next_lexeme()
-{
-    if (!finished())
-       return m_lexemes[m_current_lexeme_index + 1];
-    
-    m_good = false;
-    report_syntax_error(m_lexemes[m_current_lexeme_index].line());
-    return m_lexemes[m_current_lexeme_index];
-}
-
 int Parser::parse_number(string str)
 {
     return atoi(str.c_str());
@@ -156,15 +141,25 @@ Instruction* Parser::parse_program()
 {
     start();
     instructions program_body;
+    instructions functions;
     Instruction* instruction = 0;
+    
+    while (match_current_lexeme(kEndofLine))
+        next_line();
+    
     while (!finished())
     {
         instruction = 0;
         
         instruction = parse_function_definition();
         
-        if (!instruction)
-            instruction = parse_instruction();
+        if (instruction)
+        {
+            functions.push_back(instruction);
+            continue;
+        }
+
+        instruction = parse_instruction();
         
         if (!instruction)
         {
@@ -175,7 +170,7 @@ Instruction* Parser::parse_program()
         program_body.push_back(instruction);
     }
     
-    return new Program(end(), program_body);
+    return new Program(end(), program_body, functions);
 }
 
 Instruction* Parser::parse_instruction()
@@ -239,9 +234,11 @@ Instruction* Parser::parse_read()
     if (!match_current_lexeme(kId))
         return 0;
     
+    string name = current_lexeme().value();
+    
     next_lexeme();
     
-    return new ReadInstruction(end(), current_lexeme().value());
+    return new ReadInstruction(end(), name);
 }
 
 Instruction* Parser::parse_assignment()
@@ -302,6 +299,8 @@ Instruction* Parser::parse_if_block()
     if(!match_current_lexeme(kColon))
         return 0;
     
+    next_lexeme();
+    
     next_line();
     
     instructions block;
@@ -327,6 +326,8 @@ Instruction* Parser::parse_while_block()
     if (!match_current_lexeme(kWhileKeyword))
         return 0;
     
+    next_lexeme();
+    
     Instruction* condition = parse_condition();
     
     if(!condition)
@@ -334,6 +335,8 @@ Instruction* Parser::parse_while_block()
     
     if(!match_current_lexeme(kColon))
         return 0;
+    
+    next_lexeme();
     
     next_line();
     
@@ -503,7 +506,7 @@ Instruction* Parser::parse_function_call()
         
         next_lexeme();
     }
-    return new FunctionCallInstruction(end(), parameters);
+    return new FunctionCallInstruction(end(), name, parameters);
 }
 
 Instruction* Parser::parse_term()
@@ -580,6 +583,8 @@ Instruction* Parser::parse_condition()
         return 0;
     
     Lexeme lexeme = current_lexeme();
+    
+    next_lexeme();
     
     Instruction* right = parse_expression();
     
