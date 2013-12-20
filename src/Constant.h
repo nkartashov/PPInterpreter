@@ -18,7 +18,7 @@ public:
     
     int value() const {return m_value;}
     
-    int accept_visit(Visitor& visitor) {return visitor.visit(*this);}
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     int m_value;

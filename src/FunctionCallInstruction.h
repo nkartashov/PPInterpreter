@@ -26,7 +26,7 @@ public:
     string const& name() const {return m_name;}
     instructions const& arguments() {return m_arguments;}
     
-    int accept_visit(Visitor& visitor) {return visitor.visit(*this);}
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     string m_name;

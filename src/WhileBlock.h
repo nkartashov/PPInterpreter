@@ -15,18 +15,18 @@ class WhileBlock: public InstructionBlock
 {
 public:
     WhileBlock(int line,
-            Instruction const* condition,
-            instructions const& block):
-    Instruction(line),
-    m_condition(condition),
-    m_block(block) {}
+               instructions const& block,
+               Instruction* condition):
+    InstructionBlock(line, block),
+    m_condition(condition)
+    {}
     
     Instruction const* condition() {return m_condition;}
-    instructions const& block() {return m_block;}
+    
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     Instruction* m_condition;
-    instructions m_block;
 };
 
 #endif

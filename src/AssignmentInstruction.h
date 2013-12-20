@@ -30,7 +30,7 @@ public:
     string const& name() const {return m_name;}
     Instruction* const expression() const {return m_expression;}
     
-    int accept_visit(Visitor& visitor) {return visitor.visit(*this);}
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     string m_name;

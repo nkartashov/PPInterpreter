@@ -22,7 +22,7 @@ public:
     
     string const& variable() const {return m_variable;}
     
-    int accept_visit(Visitor& visitor) {return visitor.visit(*this);}
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     string m_variable;

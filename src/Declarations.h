@@ -13,6 +13,6 @@
 
 #include "Instruction.h"
 
-typedef std::vector<Instruction> instructions;
+typedef std::vector<Instruction*> instructions;
 
 #endif

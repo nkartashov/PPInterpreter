@@ -22,6 +22,7 @@ using std::shared_ptr;
 using namespace std;
 
 #include "Lexer.h"
+#include "Parser.h"
 #include "Lexeme.h"
 #include "ErrorHandler.h"
 
@@ -39,7 +40,13 @@ int main(int argc, const char* argv[])
 //    string code_file_path = "fib2.pp";
 //    string code_file_path = "comment_test.pp";
 //    string code_file_path = "syntax_error_test.pp";
-    string code_file_path = "syntax_error_test2.pp";
+//    string code_file_path = "syntax_error_test2.pp";
+//    string code_file_path = "multiline_code_test.pp";
+//    string code_file_path = "empty_function_test.pp";
+//    string code_file_path = "assignment_test.pp";
+//    string code_file_path = "complex_assignment_test_no_brackets.pp";
+//    string code_file_path = "complex_assignment_test_with_brackets.pp";
+    string code_file_path = "assignment_with_functions.pp";
     ifstream* input_stream = new ifstream(code_file_path);
     
     if (!*input_stream)
@@ -65,6 +72,10 @@ int main(int argc, const char* argv[])
     lexer.tokenize();
     
     vector<Lexeme> lol = lexer.get_result();
+    
+    Parser* parser = new Parser(lol);
+    
+    
     
     input_stream->close();
     return 0;

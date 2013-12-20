@@ -14,11 +14,13 @@
 class ReturnInstruction: public Instruction
 {
 public:
-    PrintInstruction(int line, Instruction* expression): Instruction(line), m_expression(expression) {}
+    ReturnInstruction(int line, Instruction* expression):
+    Instruction(line),
+    m_expression(expression) {}
     
     Instruction const* expression() const {return m_expression;}
     
-    int accept_visit(Visitor& visitor) {return visitor.visit(*this);}
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     Instruction* m_expression;

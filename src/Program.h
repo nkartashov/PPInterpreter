@@ -16,7 +16,7 @@ class Program: public InstructionBlock
 {
 public:
     Program(int line, instructions const& block): InstructionBlock(line, block) {}
-    int accept_visitor(Visitor& visitor) {return visitor.visit(*this);}
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
 };

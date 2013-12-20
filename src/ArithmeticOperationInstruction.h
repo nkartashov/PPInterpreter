@@ -13,10 +13,10 @@
 
 enum ArithmeticOperation
 {
-    kAddition = 0,
-    kSubtraction,
-    kMultiplication,
-    kDivision,
+    kAdd = 0,
+    kSub,
+    kMul,
+    kDiv,
 };
 
 class ArithmeticOperationInstruction: public Instruction
@@ -35,7 +35,7 @@ public:
     Instruction* left_operand() const {return m_left_operand;}
     Instruction* right_operand() const {return m_right_operand;}
     
-    int accept_visit(Visitor& visitor) {return visitor.visit(*this);}
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     ArithmeticOperation m_operation;

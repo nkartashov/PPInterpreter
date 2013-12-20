@@ -13,12 +13,12 @@
 
 enum LogicalOperation
 {
-    Equal = 0,
-    NotEqual,
-    Less,
-    Greater,
-    LessEqual,
-    GreaterEqual
+    kEqual = 0,
+    kNotEqual,
+    kLess,
+    kGreater,
+    kLessEqual,
+    kGreaterEqual
 };
 
 class ConditionalInstruction: public Instruction
@@ -36,6 +36,8 @@ public:
     LogicalOperation operation() const {return m_operation;}
     Instruction const* left_operand() const {return m_left_operand;}
     Instruction const* right_operand() const {return m_right_operand;}
+    
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     LogicalOperation m_operation;

@@ -18,7 +18,7 @@ public:
     virtual ~Instruction() {}
     int line() const {return m_line;}
     virtual bool does_return() const {return false;}
-    virtual int accept_visit(Visitor& visitor) = 0;
+    virtual int accept_visit(Visitor* visitor) = 0;
     
 private:
     int m_line;

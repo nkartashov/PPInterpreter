@@ -18,7 +18,7 @@ public:
     
     Instruction const* expression() const {return m_expression;}
     
-    int accept_visit(Visitor& visitor) {return visitor.visit(*this);}
+    int accept_visit(Visitor* visitor) {return visitor->visit(*this);}
     
 private:
     Instruction* m_expression;
