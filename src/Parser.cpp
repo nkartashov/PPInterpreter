@@ -179,7 +179,7 @@ instruction_ptr Parser::parse_instruction()
     if (!result)
     {
         restore();
-        result = parse_function_call();
+        result = parse_expression();
     }
     
     if (!result)
