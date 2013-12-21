@@ -6,12 +6,19 @@ SOURCEDIR = src
 OBJDIR = $(BINDIR)/obj
 
 SOURCES = $(wildcard $(SOURCEDIR)/*.cpp)
-OBJECTS = $(patsubst %.cpp, %.o, $(SOURCES))
+OBJECTS = $(patsubst $(SOURCEDIR)/%, $(OBJDIR)/%, $(patsubst %.cpp, %.o, $(SOURCES)))
 
 TARGET = $(BINDIR)/ppinterp
 
 $(TARGET): init $(OBJECTS)
-	$(CC) $(CFLAGS) $(SOURCES) -o $@
+	@echo -n 'Linking $@ ...'
+	$(CC) $(CFLAGS) $(OBJECTS) -o $@
+	@echo ' OK'
+
+$(OBJDIR)/%.o: $(SOURCEDIR)/%.cpp
+	@echo -n 'Compiling $@ ...'
+	@$(CC) -c $(CFLAGS) $< -o $@
+	@echo ' OK'
 
 init:
 	@mkdir -p $(OBJDIR)
