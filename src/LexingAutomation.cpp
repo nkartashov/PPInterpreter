@@ -23,9 +23,8 @@ void LexingAutomation::set_result(Lexeme lexeme)
     m_result.push_back(lexeme);
 }
 
-void LexingAutomation::set_state(LexerState* state)
+void LexingAutomation::set_state(state_ptr state)
 {
-    delete m_state;
     m_state = state;
 }
 
@@ -63,9 +62,4 @@ void LexingAutomation::next_line()
     m_column = -1;
     ++m_line;
     clear_buffer();
-}
-
-bool LexingAutomation::is_good()
-{
-    return m_state->get_is_good_state() == kOKState;
 }

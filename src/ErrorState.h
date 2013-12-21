@@ -15,7 +15,6 @@ class ErrorState: public LexerState
 {
 public:
     void next_state(LexingAutomation& automation, SymbolTypes symbol_type);
-    virtual LexingAutomationStates get_is_good_state() {return kErrorState;}
 };
 
 #endif /* defined(__PPInterpreter__ErrorState__) */

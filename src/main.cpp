@@ -29,13 +29,13 @@ using namespace std;
 
 int main(int argc, const char* argv[])
 {
-//    if (argc < 2)
-//    {
-//        cout << "Not enough arguments" << endl;
-//        cout << "Aborting ..." << endl;
-//        return 1;
-//    }
-//    string code_file_path = argv[1];
+    if (argc != 2)
+    {
+        cout << "Arguments number mismatch." << endl;
+        cout << "Aborting ..." << endl;
+        return 1;
+    }
+    string code_file_path = argv[1];
 //    string code_file_path = "simple_instruction.pp";
 //    string code_file_path = "fib1.pp";
 //    string code_file_path = "fib2.pp";
@@ -52,12 +52,16 @@ int main(int argc, const char* argv[])
 //    string code_file_path = "a_plus_b_via_func.pp";
 //    string code_file_path = "rootN.pp";
 //    string code_file_path = "fib.pp";
-    string code_file_path = "one_more_fib.pp";
-    ifstream* input_stream = new ifstream(code_file_path);
+//    string code_file_path = "one_more_fib.pp";
+//    string code_file_path = "undef_var.pp";
+//    string code_file_path = "global_var.pp";
+//    string code_file_path = "rec.pp";
+//    string code_file_path = "rec_error.pp";
+    shared_ptr<ifstream> input_stream(new ifstream(code_file_path));
     
     if (!*input_stream)
     {
-        cout << "File " << code_file_path << " not found" << endl;
+        cout << "File " << code_file_path << " not found." << endl;
         cout << "Aborting..." << endl;
         return 2;
     }
@@ -68,25 +72,44 @@ int main(int argc, const char* argv[])
     input_stream->seekg(0, input_stream->beg);
     if (file_length == 0)
     {
-        cout << "Empty code file" << endl;
+        cout << "Empty code file " << code_file_path << endl;
         cout << "Nothing to do..." << endl;
-        input_stream->close();
         return 3;
     }
     
     Lexer lexer(input_stream);
     lexer.tokenize();
     
-    vector<Lexeme> lol = lexer.get_result();
+    if (!ErrorHandler::is_ok())
+    {
+        cout << "Lexing error in file " << code_file_path << endl;
+        cout << "Aborting..." << endl;
+        return 4;
+    }
     
-    Parser parser(lol);
+    vector<Lexeme> lexemes = lexer.get_result();
     
+    Parser parser(lexemes);
+    
+    if (!ErrorHandler::is_ok())
+    {
+        cout << "Parsing error in file " << code_file_path << endl;
+        cout << "Aborting..." << endl;
+        return 5;
+    }
+
     shared_ptr<Program> program = parser.get_parsed_program();
     Evaluator eval(*program);
     
     eval.execute_program();
     
-    input_stream->close();
+    if (!ErrorHandler::is_ok())
+    {
+        cout << "Evaluation error in file " << code_file_path << endl;
+        cout << "Aborting..." << endl;
+        return 6;
+    }
+    
     return 0;
 }
 

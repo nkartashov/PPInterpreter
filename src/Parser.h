@@ -26,30 +26,27 @@ class Parser
 public:
     Parser(vector<Lexeme>& lexemes);
     
+    program_ptr get_parsed_program() {return m_program;}
+    
+private:
     Lexeme const& current_lexeme();
     Lexeme const& next_lexeme();
-
+    
     bool match_current_lexeme(LexemeTypes type);
     
     bool match_current_lexeme_simple_arithmetic();
     bool match_current_lexeme_complex_arithmetic();
     bool match_current_lexeme_logic();
-
-    void next_line();
     
-    void start();
-    int end();
+    void next_line();
     
     void save();
     void restore();
     
     bool finished();
     
-    bool is_good();
+    void report_current_syntax_error();
     
-    program_ptr get_parsed_program() {return m_program;}
-    
-private:
     program_ptr parse_program();
     instruction_ptr parse_instruction();
     instruction_ptr parse_function_definition();
@@ -77,9 +74,7 @@ private:
     
     int m_current_lexeme_index;
     int m_buf_lexeme_index;
-    int m_start_line;
     const vector<Lexeme>& m_lexemes;
-    bool m_good;
     program_ptr m_program;
 };
 

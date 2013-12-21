@@ -14,6 +14,7 @@
 
 #include "Visitor.h"
 #include "Declarations.h"
+#include "ErrorHandler.h"
 
 using std::stack;
 

@@ -14,17 +14,10 @@
 
 class LexingAutomation;
 
-enum LexingAutomationStates
-{
-    kErrorState = -1,
-    kOKState
-};
-
 class LexerState
 {
 public:
     virtual void next_state(LexingAutomation& automation, SymbolTypes lexeme_type) = 0;
-    virtual LexingAutomationStates get_is_good_state() {return kOKState;}
     virtual ~LexerState() {}
 };
 

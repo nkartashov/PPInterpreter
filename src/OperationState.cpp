@@ -16,6 +16,7 @@
 #include "ErrorState.h"
 #include "CommentState.h"
 
+#include "ErrorHandler.h"
 
 void OperationState::next_state(LexingAutomation& automation, SymbolTypes symbol_type)
 {
@@ -24,12 +25,12 @@ void OperationState::next_state(LexingAutomation& automation, SymbolTypes symbol
         case kLetter:
             automation.set_result(handle_operation(automation.get_buffer_prefix(), automation.line(), automation.column()));
             automation.set_buffer_to_last_char();
-            automation.set_state(new AlphanumericState());
+            automation.set_state(state_ptr(new AlphanumericState()));
             break;
         case kDigit:
             automation.set_result(handle_operation(automation.get_buffer_prefix(), automation.line(), automation.column()));
             automation.set_buffer_to_last_char();
-            automation.set_state(new NumericState());
+            automation.set_state(state_ptr(new NumericState()));
             break;
             
         case kOperationSymbol:
@@ -43,7 +44,7 @@ void OperationState::next_state(LexingAutomation& automation, SymbolTypes symbol
                 Lexeme result = handle_separator(lexeme_symbol, automation.line(), automation.column());
                 automation.set_result(result);
                 automation.clear_buffer();
-                automation.set_state(new EmptyState());
+                automation.set_state(state_ptr(new EmptyState()));
             }
             break;
             
@@ -51,19 +52,20 @@ void OperationState::next_state(LexingAutomation& automation, SymbolTypes symbol
             {
                 automation.set_result(handle_operation(automation.get_buffer_prefix(), automation.line(), automation.column()));
                 automation.clear_buffer();
-                automation.set_state(new EmptyState());
+                automation.set_state(state_ptr(new EmptyState()));
             }
             break;
             
         case kHashSymbol:
             {
                 automation.set_result(handle_operation(automation.get_buffer_prefix(), automation.line(),automation.column()));
-                automation.set_state(new CommentState());
+                automation.set_state(state_ptr(new CommentState()));
             }
             break;
             
         default:
-            automation.set_state(new ErrorState());
+            ErrorHandler::report_syntax_error(automation.line());
+            automation.set_state(state_ptr(new ErrorState()));
             break;
     }
 

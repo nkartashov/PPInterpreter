@@ -14,8 +14,12 @@
 
 #include "Lexeme.h"
 
+class LexerState;
+
 using std::string;
 using std::vector;
+
+typedef std::shared_ptr<LexerState> state_ptr;
 
 class LexerState;
 
@@ -23,7 +27,7 @@ class LexingAutomation
 {
 public:
     LexingAutomation();
-    void set_state(LexerState*);
+    void set_state(state_ptr);
     void set_result(Lexeme);
     
     void set_buffer(string);
@@ -33,8 +37,6 @@ public:
     
     void next_symbol(char symbol);
     void next_line();
-    
-    bool is_good();
     
     string const& buffer() const {return m_buffer;}
     int line() const {return m_line;}
@@ -48,7 +50,7 @@ private:
     int m_line;
     int m_column;
     string m_buffer;
-    LexerState* m_state;
+    state_ptr m_state;
     vector<Lexeme> m_result;
 };
 

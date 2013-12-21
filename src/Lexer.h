@@ -9,20 +9,18 @@
 #ifndef __PPInterpreter__Lexer__
 #define __PPInterpreter__Lexer__
 
-#include <vector>
 #include <iostream>
 
 #include "Lexeme.h"
 #include "LexingAutomation.h"
 
-using std::vector;
-using std::istream;
+typedef std::shared_ptr<std::istream> istream_ptr;
+typedef std::shared_ptr<LexingAutomation> automation_ptr;
 
 class Lexer
 {
 public:
-    Lexer(istream* input_stream);
-    ~Lexer();
+    Lexer(istream_ptr input_stream);
     
     void tokenize();
     vector<Lexeme> get_result();
@@ -30,8 +28,8 @@ public:
 private:
     vector<Lexeme> clean_result_stream(vector<Lexeme> result);
     
-    istream* m_stream;
-    LexingAutomation* m_automation;
+    istream_ptr m_stream;
+    automation_ptr m_automation;
 };
 
 #endif /* defined(__PPInterpreter__Lexer__) */

@@ -16,6 +16,8 @@
 #include "ErrorState.h"
 #include "CommentState.h"
 
+#include "ErrorHandler.h"
+
 void AlphanumericState::next_state(LexingAutomation &automation, SymbolTypes symbol_type)
 {
     switch (symbol_type)
@@ -29,7 +31,7 @@ void AlphanumericState::next_state(LexingAutomation &automation, SymbolTypes sym
             {
                 automation.set_result(handle_alphanumeric(automation.get_buffer_prefix(), automation.line(), automation.column()));
                 automation.set_buffer_to_last_char();
-                automation.set_state(new OperationState());
+                automation.set_state(state_ptr(new OperationState()));
             }
             break;
             
@@ -41,7 +43,7 @@ void AlphanumericState::next_state(LexingAutomation &automation, SymbolTypes sym
                 Lexeme result = handle_separator(lexeme_symbol, automation.line(), automation.column());
                 automation.set_result(result);
                 automation.clear_buffer();
-                automation.set_state(new EmptyState());
+                automation.set_state(state_ptr(new EmptyState()));
             }
             break;
         
@@ -50,7 +52,7 @@ void AlphanumericState::next_state(LexingAutomation &automation, SymbolTypes sym
                 automation.set_result(handle_alphanumeric(automation.get_buffer_prefix(), automation.line(), automation.column()));
                 automation.set_result(end_of_line(automation.line(), automation.column()));
                 automation.clear_buffer();
-                automation.set_state(new EmptyState());
+                automation.set_state(state_ptr(new EmptyState()));
             }
             break;
             
@@ -58,19 +60,20 @@ void AlphanumericState::next_state(LexingAutomation &automation, SymbolTypes sym
             {
                 automation.set_result(handle_alphanumeric(automation.get_buffer_prefix(), automation.line(), automation.column()));
                 automation.clear_buffer();
-                automation.set_state(new EmptyState());
+                automation.set_state(state_ptr(new EmptyState()));
             }
             break;
             
         case kHashSymbol:
             {
                 automation.set_result(handle_alphanumeric(automation.get_buffer_prefix(), automation.line(),automation.column()));
-                automation.set_state(new CommentState());
+                automation.set_state(state_ptr(new CommentState()));
             }
             break;
             
         default:
-            automation.set_state(new ErrorState());
+            ErrorHandler::report_syntax_error(automation.line());
+            automation.set_state(state_ptr(new ErrorState()));
             break;
     }
 }

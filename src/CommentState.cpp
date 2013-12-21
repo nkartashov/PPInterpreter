@@ -24,7 +24,7 @@ void CommentState::next_state(LexingAutomation& automation, SymbolTypes symbol_t
             {
                 automation.set_result(end_of_line(automation.line(), automation.column()));
                 automation.clear_buffer();
-                automation.set_state(new EmptyState());
+                automation.set_state(state_ptr(new EmptyState()));
             }
             break;
             

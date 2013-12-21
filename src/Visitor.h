@@ -41,6 +41,8 @@ public:
     virtual int visit(WhileBlock const&) = 0;
     virtual int visit(ReturnInstruction const&) = 0;
     virtual int visit(InstructionBlock const&) = 0;
+    
+    virtual ~Visitor() {}
 };
 
 #endif

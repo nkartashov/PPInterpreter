@@ -6,21 +6,13 @@
 //  Copyright (c) 2013 Nikita Kartashov. All rights reserved.
 //
 
-#include <string>
-
 #include "ErrorHandler.h"
 #include "Lexer.h"
 
-Lexer::Lexer(istream* input_stream):
+Lexer::Lexer(istream_ptr input_stream):
 m_stream(input_stream),
 m_automation(new LexingAutomation())
 {
-    
-}
-
-Lexer::~Lexer()
-{
-    delete m_automation;
 }
 
 void Lexer::tokenize()
@@ -41,11 +33,8 @@ void Lexer::tokenize()
         
         // Insert newline symbol to separate the lines
         m_automation->next_symbol('\n');
-        if (!m_automation->is_good())
-        {
-            report_syntax_error(m_automation->line());
+        if (!ErrorHandler::is_ok())
             return;
-        }
     }
 }
 

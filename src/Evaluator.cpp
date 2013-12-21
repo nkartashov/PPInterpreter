@@ -42,19 +42,32 @@ void Evaluator::execute_program()
 
 int Evaluator::visit(Constant const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     return instruction.value();
 }
 
 int Evaluator::visit(Variable const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     variable_scope::iterator variable = scope().find(instruction.name());
     if (variable == scope().end())
+    {
+        ErrorHandler::report_undefined_variable(instruction.line(), instruction.name());
         return 0;
+    }
+    
     return variable->second;
 }
 
 int Evaluator::visit(Program const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     variable_scope program_scope;
     in_function(program_scope);
     for (instructions::const_iterator it = instruction.functions().begin(); it != instruction.functions().end(); ++it)
@@ -66,12 +79,18 @@ int Evaluator::visit(Program const& instruction)
 
 int Evaluator::visit(Function const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     m_function_scope[instruction.name()] = &instruction;
     return 0;
 }
 
 int Evaluator::visit(AssignmentInstruction const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     int value = instruction.expression()->accept_visit(this);
     scope()[instruction.name()] = value;
     return m_result;
@@ -79,14 +98,23 @@ int Evaluator::visit(AssignmentInstruction const& instruction)
 
 int Evaluator::visit(FunctionCallInstruction const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     function_scope::const_iterator func = m_function_scope.find(instruction.name());
     if (func == m_function_scope.end())
+    {
+        ErrorHandler::report_undefined_function(instruction.line(), instruction.name());
         return 0;
+    }
     
     Function const* function_to_call = func->second;
     
     if (function_to_call->arguments().size() != instruction.arguments().size())
+    {
+        ErrorHandler::report_arguments_number_mismatch(instruction.line(), instruction.name());
         return 0;
+    }
     
     variable_scope function_to_call_scope;
     
@@ -103,6 +131,9 @@ int Evaluator::visit(FunctionCallInstruction const& instruction)
 
 int Evaluator::visit(ArithmeticOperationInstruction const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     int left = instruction.left_operand()->accept_visit(this);
     int right = instruction.right_operand()->accept_visit(this);
     
@@ -120,7 +151,10 @@ int Evaluator::visit(ArithmeticOperationInstruction const& instruction)
         case kDiv:
             {
                 if (right == 0)
+                {
+                    ErrorHandler::report_division_by_zero(instruction.line());
                     return 0;
+                }
                 
                 return left / right;
             }
@@ -132,19 +166,31 @@ int Evaluator::visit(ArithmeticOperationInstruction const& instruction)
 
 int Evaluator::visit(ReadInstruction const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     cin >> scope()[instruction.variable()];
     return m_result;
 }
 
 int Evaluator::visit(PrintInstruction const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     int result = instruction.expression()->accept_visit(this);
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     cout << result << endl;
     return m_result;
 }
 
 int Evaluator::visit(ConditionalInstruction const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     int left = instruction.left_operand()->accept_visit(this);
     int right = instruction.right_operand()->accept_visit(this);
     
@@ -175,6 +221,9 @@ int Evaluator::visit(ConditionalInstruction const& instruction)
 
 int Evaluator::visit(IfBlock const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     if (instruction.condition()->accept_visit(this))
         instruction.InstructionBlock::accept_visit(this);
     return m_result;
@@ -182,6 +231,9 @@ int Evaluator::visit(IfBlock const& instruction)
 
 int Evaluator::visit(WhileBlock const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+
     while (instruction.condition()->accept_visit(this))
         instruction.InstructionBlock::accept_visit(this);
     return m_result;
@@ -189,6 +241,9 @@ int Evaluator::visit(WhileBlock const& instruction)
 
 int Evaluator::visit(ReturnInstruction const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     int result = instruction.expression()->accept_visit(this);
     set_return_value(result);
     return m_result;
@@ -196,6 +251,9 @@ int Evaluator::visit(ReturnInstruction const& instruction)
 
 int Evaluator::visit(InstructionBlock const& instruction)
 {
+    if (!ErrorHandler::is_ok())
+        return 0;
+    
     for (instructions::const_iterator it = instruction.block().begin(); it != instruction.block().end() && !has_returned(); ++it)
     {
         (*it)->accept_visit(this);
@@ -204,7 +262,7 @@ int Evaluator::visit(InstructionBlock const& instruction)
 }
 
 void Evaluator::set_return_value(int value)
-{
+{    
     m_has_returned = true;
     m_result = value;
 }
