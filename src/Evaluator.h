@@ -30,6 +30,9 @@ public:
     void execute_program();
     
 private:
+    Evaluator(Evaluator const&);
+    Evaluator& operator=(Evaluator const&);
+    
     int visit(Constant const&);
     int visit(Variable const&);
     int visit(Program const&);

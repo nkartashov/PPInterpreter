@@ -26,6 +26,9 @@ public:
     vector<Lexeme> get_result();
     
 private:
+    Lexer(Lexer const&);
+    Lexer& operator=(Lexer const&);
+
     vector<Lexeme> clean_result_stream(vector<Lexeme> result);
     
     istream_ptr m_stream;

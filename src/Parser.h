@@ -29,6 +29,9 @@ public:
     program_ptr get_parsed_program() {return m_program;}
     
 private:
+    Parser(Parser const&);
+    Parser& operator=(Parser const&);
+    
     Lexeme const& current_lexeme();
     Lexeme const& next_lexeme();
     
