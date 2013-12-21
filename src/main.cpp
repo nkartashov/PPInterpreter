@@ -36,27 +36,6 @@ int main(int argc, const char* argv[])
         return 1;
     }
     string code_file_path = argv[1];
-//    string code_file_path = "simple_instruction.pp";
-//    string code_file_path = "fib1.pp";
-//    string code_file_path = "fib2.pp";
-//    string code_file_path = "comment_test.pp";
-//    string code_file_path = "syntax_error_test.pp";
-//    string code_file_path = "syntax_error_test2.pp";
-//    string code_file_path = "multiline_code_test.pp";
-//    string code_file_path = "empty_function_test.pp";
-//    string code_file_path = "assignment_test.pp";
-//    string code_file_path = "complex_assignment_test_no_brackets.pp";
-//    string code_file_path = "complex_assignment_test_with_brackets.pp";
-//    string code_file_path = "assignment_with_functions.pp";
-//    string code_file_path = "simple_a+b.pp";
-//    string code_file_path = "a_plus_b_via_func.pp";
-//    string code_file_path = "rootN.pp";
-//    string code_file_path = "fib.pp";
-//    string code_file_path = "one_more_fib.pp";
-//    string code_file_path = "undef_var.pp";
-//    string code_file_path = "global_var.pp";
-//    string code_file_path = "rec.pp";
-//    string code_file_path = "rec_error.pp";
     shared_ptr<ifstream> input_stream(new ifstream(code_file_path));
     
     if (!*input_stream)
