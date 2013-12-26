@@ -53,4 +53,6 @@ Lexeme handle_alphanumeric(string alphanumeric, int line, int column);
 Lexeme handle_operation(string operation, int line, int column);
 Lexeme end_of_line(int line, int column);
 
+LexemeTypes determine_operation_type(string operation);
+
 #endif /* defined(__PPInterpreter__LexemeTypes__) */

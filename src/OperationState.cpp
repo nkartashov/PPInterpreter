@@ -34,6 +34,15 @@ void OperationState::next_state(LexingAutomation& automation, SymbolTypes symbol
             break;
             
         case kOperationSymbol:
+            if (determine_operation_type(automation.buffer()) == kUnknownLexeme)
+            {
+                string buffer = automation.buffer();
+                automation.set_result(handle_operation(automation.get_buffer_prefix(), automation.line(), automation.column()));
+                string lexeme_symbol(1, buffer[buffer.length() - 1]);
+                automation.set_result(handle_operation(lexeme_symbol, automation.line(), automation.column()));
+                automation.clear_buffer();
+                automation.set_state(state_ptr(new EmptyState()));
+            }
             break;
             
         case kSeparator:

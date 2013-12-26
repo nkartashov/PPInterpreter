@@ -54,32 +54,44 @@ Lexeme handle_alphanumeric(string alphanumeric, int line, int column)
 
 Lexeme handle_operation(string operation, int line, int column)
 {
+    return Lexeme(determine_operation_type(operation), "", line, column);
+}
+
+LexemeTypes determine_operation_type(string operation)
+{
+    LexemeTypes type = kUnknownLexeme;
     if (operation.length() == 1)
     {
         switch (operation[0])
         {
             case '=':
-                return Lexeme(kAssignment, "", line, column);
+                type = kAssignment;
+                break;
             case '<':
-                return Lexeme(kLessOperation, "", line, column);
+                type = kLessOperation;
+                break;
             case '>':
-                return Lexeme(kGreaterOperation, "", line, column);
+                type = kGreaterOperation;
+                break;
             case '-':
-                return Lexeme(kSubtraction, "", line, column);
+                type = kSubtraction;
+                break;
             case '+':
-                return Lexeme(kAddition, "", line, column);
+                type = kAddition;
+                break;
             case '/':
-                return Lexeme(kDivision, "", line, column);
+                type = kDivision;
+                break;
             case '*':
-                return Lexeme(kMultiplication, "", line, column);
+                type = kMultiplication;
+                break;
             default:
-                return Lexeme(kUnknownLexeme, "", line, column);
+                type = kUnknownLexeme;
+                break;
         }
     }
     else
     {
-        LexemeTypes type = kUnknownLexeme;
-        
         if (operation == "==")
             type = kEqualOperation;
         if (operation == "!=")
@@ -88,9 +100,8 @@ Lexeme handle_operation(string operation, int line, int column)
             type = kLessEqualOperation;
         if (operation == ">=")
             type = kGreaterEqualOperation;
-        
-        return Lexeme(type, "", line, column);
     }
+    return type;
 }
 
 Lexeme end_of_line(int line, int column)
