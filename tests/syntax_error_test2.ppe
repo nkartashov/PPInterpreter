@@ -1,0 +1,7 @@
+def fun(i):
+    return 1 + i * 2
+end    
+a = fun(0)
+def _kkk()
+end
+lol = a + _kkk()
