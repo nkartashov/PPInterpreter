@@ -20,11 +20,10 @@ $(OBJDIR)/%.o: $(SOURCEDIR)/%.cpp
 	@$(CC) -c $(CFLAGS) $< -o $@
 	@echo ' OK'
 
+.PHONY: clean init test
+
 init:
 	@mkdir -p $(OBJDIR)
 
 clean:
-	@rm -rf $(BINDIR) 
-	
-.PHONY: clean init
-	
+	@rm -rf $(BINDIR) 	
