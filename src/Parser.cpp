@@ -122,7 +122,7 @@ Lexeme const& Parser::next_lexeme()
 {
     if (!finished())
         return m_lexemes[++m_current_lexeme_index];
-
+    
     return current_lexeme();
 }
 
@@ -141,7 +141,7 @@ program_ptr Parser::parse_program()
     while (match_current_lexeme(kEndofLine))
         next_line();
     
-    while (!finished())
+    while (!finished() && ErrorHandler::is_ok())
     {
         instruction = instruction_ptr();
         
@@ -152,7 +152,7 @@ program_ptr Parser::parse_program()
             functions.push_back(instruction);
             continue;
         }
-
+        
         instruction = parse_instruction();
         
         if (!instruction)
@@ -171,7 +171,7 @@ instruction_ptr Parser::parse_instruction()
 {
     if (!ErrorHandler::is_ok())
         return instruction_ptr();
-        
+    
     
     save();
     instruction_ptr result = parse_assignment();
@@ -308,7 +308,7 @@ instruction_ptr Parser::parse_if_block()
         report_current_syntax_error();
         return instruction_ptr();
     }
-
+    
     if(!match_current_lexeme(kColon))
     {
         report_current_syntax_error();
@@ -495,33 +495,37 @@ instruction_ptr Parser::parse_expression()
     if (!left)
         return instruction_ptr();
     
-    if (!match_current_lexeme_simple_arithmetic())
-        return left;
-    
-    Lexeme lexeme = current_lexeme();
-    
-    next_lexeme();
-    
-    instruction_ptr right = parse_expression();
-    
-    if (!right)
+    while (match_current_lexeme_simple_arithmetic())
     {
-        report_current_syntax_error();
-        return instruction_ptr();
-    }
-    
-    switch (lexeme.type())
-    {
-        case kAddition:
-            return instruction_ptr(new ArithmeticOperationInstruction(start_line, kAdd, left, right));
-        case kSubtraction:
-            return instruction_ptr(new ArithmeticOperationInstruction(start_line, kSub, left, right));
-        default:
+        Lexeme lexeme = current_lexeme();
+        
+        next_lexeme();
+        
+        instruction_ptr right = parse_term();
+        
+        if (!right)
         {
             report_current_syntax_error();
             return instruction_ptr();
         }
+        
+        switch (lexeme.type())
+        {
+            case kAddition:
+                left = instruction_ptr(new ArithmeticOperationInstruction(start_line, kAdd, left, right));
+                break;
+            case kSubtraction:
+                left = instruction_ptr(new ArithmeticOperationInstruction(start_line, kSub, left, right));
+                break;
+            default:
+            {
+                report_current_syntax_error();
+                return instruction_ptr();
+            }
+        }
     }
+    
+    return left;
 }
 
 instruction_ptr Parser::parse_function_call()
@@ -573,7 +577,7 @@ instruction_ptr Parser::parse_function_call()
     }
     
     next_lexeme();
-
+    
     return instruction_ptr(new FunctionCallInstruction(start_line, name, parameters));
 }
 
@@ -586,33 +590,34 @@ instruction_ptr Parser::parse_term()
     if (!left)
         return instruction_ptr();
     
-    if (!match_current_lexeme_complex_arithmetic())
-        return left;
-    
-    Lexeme lexeme = current_lexeme();
-    
-    next_lexeme();
-    
-    instruction_ptr right = parse_term();
-    
-    if (!right)
+    while (match_current_lexeme_complex_arithmetic())
     {
-        report_current_syntax_error();
-        return instruction_ptr();
-    }
-    
-    switch (lexeme.type())
-    {
-        case kMultiplication:
-            return instruction_ptr(new ArithmeticOperationInstruction(start_line, kMul, left, right));
-        case kDivision:
-            return instruction_ptr(new ArithmeticOperationInstruction(start_line, kDiv, left, right));
-        default:
+        Lexeme lexeme = current_lexeme();
+        
+        next_lexeme();
+        instruction_ptr right = parse_value();
+        if (!right)
         {
             report_current_syntax_error();
             return instruction_ptr();
         }
+        
+        switch (lexeme.type())
+        {
+            case kMultiplication:
+                left = instruction_ptr(new ArithmeticOperationInstruction(start_line, kMul, left, right));
+                break;
+            case kDivision:
+                left = instruction_ptr(new ArithmeticOperationInstruction(start_line, kDiv, left, right));
+                break;
+            default:
+            {
+                report_current_syntax_error();
+                return instruction_ptr();
+            }
+        }
     }
+    return left;
 }
 
 instruction_ptr Parser::parse_value()
