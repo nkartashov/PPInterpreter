@@ -61,8 +61,8 @@ int main(int argc, const char* argv[])
     
     if (!ErrorHandler::is_ok())
     {
-        cout << "Lexing error in file " << code_file_path << endl;
-        cout << "Aborting..." << endl;
+//        cout << "Lexing error in file " << code_file_path << endl;
+//        cout << "Aborting..." << endl;
         return 4;
     }
     
@@ -72,8 +72,8 @@ int main(int argc, const char* argv[])
     
     if (!ErrorHandler::is_ok())
     {
-        cout << "Parsing error in file " << code_file_path << endl;
-        cout << "Aborting..." << endl;
+//        cout << "Parsing error in file " << code_file_path << endl;
+//        cout << "Aborting..." << endl;
         return 5;
     }
 
@@ -84,8 +84,8 @@ int main(int argc, const char* argv[])
     
     if (!ErrorHandler::is_ok())
     {
-        cout << "Evaluation error in file " << code_file_path << endl;
-        cout << "Aborting..." << endl;
+//        cout << "Evaluation error in file " << code_file_path << endl;
+//        cout << "Aborting..." << endl;
         return 6;
     }
     
